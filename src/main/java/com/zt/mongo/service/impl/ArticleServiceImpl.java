@@ -17,11 +17,14 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Autowired
     private ArticleRepository articleRepository;
-
+    @Override
     public List<Article> findList() {
-//        List<Article> list = articleRepository.findAll();
         long count = articleRepository.count();
         System.out.println("count = " + count);
         return null;
+    }
+    @Override
+    public Article findById(String id) {
+        return articleRepository.findOne(id);
     }
 }

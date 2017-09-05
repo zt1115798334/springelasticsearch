@@ -15,10 +15,15 @@
     <context:component-scan base-package="com.zt"/>
     <!-- 使用默认的注解映射 -->
     <mvc:annotation-driven/>
+    <mvc:default-servlet-handler />
+
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/pages/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
+    <!--<bean class="springfox.documentation.swagger2.configuration.Swagger2DocumentationConfiguration" id="SwaggerConfig"/>-->
+
+
     <!-- elasticsearch配置 -->
     <bean id="client" factory-bean="esClientBuilder" factory-method="init" destroy-method="close"/>
 

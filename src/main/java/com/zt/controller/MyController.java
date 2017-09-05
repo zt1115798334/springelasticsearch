@@ -16,7 +16,6 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/myController")
-@Api(value = "Api控制器")
 public class MyController {
 
     private static final String index = "jdjr";
@@ -36,7 +35,6 @@ public class MyController {
         return "zt";
     }
 
-    @ApiOperation(value = "添加文章信息", notes = "")
     @RequestMapping("/add")
     @ResponseBody
     public String add(String id) {

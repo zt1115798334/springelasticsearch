@@ -2,6 +2,7 @@ package com.zt.builder;
 
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.network.NetworkService;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
@@ -17,7 +18,7 @@ public class EsClientBuilder {
     private TransportClient client;
 
     public Client init() {
-
+        NetworkService networkService = null;
         //设置集群的名字
         Settings settings = Settings.builder()
                 .put("client.transport.sniff", false)

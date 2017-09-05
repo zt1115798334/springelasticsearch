@@ -21,9 +21,6 @@
         <property name="prefix" value="/WEB-INF/pages/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
-    <!--<bean class="springfox.documentation.swagger2.configuration.Swagger2DocumentationConfiguration" id="SwaggerConfig"/>-->
-
-
     <!-- elasticsearch配置 -->
     <bean id="client" factory-bean="esClientBuilder" factory-method="init" destroy-method="close"/>
 

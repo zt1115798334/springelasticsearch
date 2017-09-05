@@ -24,21 +24,15 @@ public class EsClientBuilder {
                 .put("cluster.name", clusterName)
                 .build();
         //创建集群client并添加集群节点地址
-//        client = new PreBuiltTransportClient(settings);
-        try {
-            client = new PreBuiltTransportClient(settings)
-                    .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("localhost"), 9300));
-        } catch(UnknownHostException e) {
-            e.printStackTrace();
+        client = new PreBuiltTransportClient(settings);
+        Map<String, Integer> nodeMap = parseNodeIpInfo();
+        for (Map.Entry<String, Integer> entry : nodeMap.entrySet()) {
+            try {
+                client.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(entry.getKey()), entry.getValue()));
+            } catch(UnknownHostException e) {
+                e.printStackTrace();
+            }
         }
-//        Map<String, Integer> nodeMap = parseNodeIpInfo();
-//        for (Map.Entry<String, Integer> entry : nodeMap.entrySet()) {
-//            try {
-//                client.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(entry.getKey()), entry.getValue()));
-//            } catch(UnknownHostException e) {
-//                e.printStackTrace();
-//            }
-//        }
 
         return client;
     }

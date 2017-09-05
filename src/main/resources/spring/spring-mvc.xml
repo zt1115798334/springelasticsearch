@@ -16,8 +16,9 @@
     </bean>
     <!-- elasticsearch配置 -->
     <bean id="client" factory-bean="esClientBuilder" factory-method="init" destroy-method="close"/>
+
     <bean id="esClientBuilder" class="com.zt.builder.EsClientBuilder">
         <property name="clusterName" value="elasticsearch"/>
-        <property name="nodeIpInfo" value="127.0.0.1"/>
+        <property name="nodeIpInfo" value="127.0.0.1:9300"/>
     </bean>
 </beans>

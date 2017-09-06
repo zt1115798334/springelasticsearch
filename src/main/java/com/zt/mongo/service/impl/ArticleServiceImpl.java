@@ -1,6 +1,7 @@
 package com.zt.mongo.service.impl;
 
-import com.zt.mongo.dao.ArticleDaoImpl;
+import com.zt.base.entity.PageResult;
+import com.zt.mongo.dao.ArticleDao;
 import com.zt.mongo.entity.Article;
 import com.zt.mongo.repository.ArticleRepository;
 import com.zt.mongo.service.ArticleService;
@@ -13,18 +14,26 @@ import java.util.List;
 public class ArticleServiceImpl implements ArticleService {
 
     @Autowired
-    private ArticleDaoImpl articleDao;
+    private ArticleDao articleDao;
 
     @Autowired
     private ArticleRepository articleRepository;
+
     @Override
     public List<Article> findList() {
         long count = articleRepository.count();
         System.out.println("count = " + count);
         return articleRepository.findAll();
     }
+
     @Override
     public Article findById(String id) {
         return articleRepository.findOne(id);
+    }
+
+
+    @Override
+    public PageResult<Article> findListByPage(Integer pageNumber, Integer pageSize) {
+        return articleDao.findListByPage(pageNumber, pageSize);
     }
 }

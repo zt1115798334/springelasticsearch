@@ -1,6 +1,7 @@
 package com.zt.mongo.entity;
 
 
+import com.zt.base.entity.BasePageRequest;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -9,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.Date;
 
 @Document(collection = "article")
-public class Article {
+public class Article extends BasePageRequest {
     /**
      *
      */

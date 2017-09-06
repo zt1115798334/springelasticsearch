@@ -2,6 +2,7 @@ package com.zt.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.zt.base.entity.PageResult;
 import com.zt.es.service.EsService;
 import com.zt.mongo.entity.Article;
 import com.zt.mongo.service.ArticleService;
@@ -31,27 +32,27 @@ public class MyController {
 
     @RequestMapping("/test")
     @ResponseBody
-    public String test() {
+    public Object test() {
         esService.test();
-        return "zt";
+        return true;
     }
 
     @RequestMapping("/add")
     @ResponseBody
-    public String add(String id) {
+    public Object add(String id) {
         Article article = articleService.findById(id);
         esService.save(index, type, article.getId(), JSON.parseObject(JSON.toJSONString(article)));
-        return "zt";
+        return true;
     }
 
     @RequestMapping("/batchAdd")
     @ResponseBody
-    public String batchAdd() {
-        List<Article> articles = articleService.findList();
-        articles.forEach(article -> {
+    public Object batchAdd() {
+        PageResult<Article> pageResult = articleService.findListByPage(1, 100);
+        pageResult.getList().forEach(article -> {
             esService.save(index, type, article.getId(), JSON.parseObject(JSON.toJSONString(article)));
         });
-        return "zt";
+        return true;
     }
 
     @RequestMapping("/findAll")
@@ -83,16 +84,16 @@ public class MyController {
 
     @RequestMapping("/delete")
     @ResponseBody
-    public String delete(String id) {
+    public Object delete(String id) {
         esService.delete(index, type, id);
-        return "zt";
+        return true;
     }
 
     @RequestMapping("/update")
     @ResponseBody
-    public String update(String id) {
+    public Object update(String id) {
         esService.update(index, type, id);
-        return "zt";
+        return true;
     }
 
 
@@ -112,10 +113,10 @@ public class MyController {
 
     @RequestMapping("/addTokenizer")
     @ResponseBody
-    public String addTokenizer(String id) {
+    public Object addTokenizer(String id) {
         Article article = articleService.findById(id);
         esService.save(indexTokenizer, typeTokenizer, article.getId(), JSON.parseObject(JSON.toJSONString(article)));
-        return "zt";
+        return true;
     }
 
     //    @RequestMapping("/findTokenizer")

@@ -20,10 +20,6 @@ public class MyController {
     private static final String index = "jdjr";
     private static final String type = "article";
 
-    private static final String indexTokenizer = "jdjrik";
-    private static final String typeTokenizer = "articleik";
-
-
     @Autowired
     private ArticleService articleService;
 
@@ -100,29 +96,21 @@ public class MyController {
     @RequestMapping("/createCluterName")
     @ResponseBody
     public Object createCluterName() {
-        esService.createCluterName(indexTokenizer);
+        esService.createCluterName(index);
         return true;
     }
 
     @RequestMapping("/createMapping")
     @ResponseBody
     public Object createMapping() {
-        esService.createMapping(indexTokenizer, typeTokenizer);
-        return true;
-    }
-
-    @RequestMapping("/addTokenizer")
-    @ResponseBody
-    public Object addTokenizer(String id) {
-        Article article = articleService.findById(id);
-        esService.save(indexTokenizer, typeTokenizer, article.getId(), JSON.parseObject(JSON.toJSONString(article)));
+        esService.createMapping(index, type);
         return true;
     }
 
     //    @RequestMapping("/findTokenizer")
 //    @ResponseBody
     public Object findTokenizer() {
-        JSONArray jsonArray = esService.findTokenizer(indexTokenizer, "安信证券股份有限公司关于北");
+        JSONArray jsonArray = esService.findTokenizer(index, "安信证券股份有限公司关于北");
         return jsonArray;
     }
 

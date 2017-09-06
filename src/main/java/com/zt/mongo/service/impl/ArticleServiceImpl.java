@@ -21,7 +21,7 @@ public class ArticleServiceImpl implements ArticleService {
     public List<Article> findList() {
         long count = articleRepository.count();
         System.out.println("count = " + count);
-        return null;
+        return articleRepository.findAll();
     }
     @Override
     public Article findById(String id) {

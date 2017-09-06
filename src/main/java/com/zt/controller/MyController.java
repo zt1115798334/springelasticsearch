@@ -5,8 +5,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.zt.es.service.EsService;
 import com.zt.mongo.entity.Article;
 import com.zt.mongo.service.ArticleService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +18,9 @@ public class MyController {
 
     private static final String index = "jdjr";
     private static final String type = "article";
+
+    private static final String indexTokenizer = "jdjrik";
+    private static final String typeTokenizer = "articleik";
 
 
     @Autowired
@@ -43,22 +44,41 @@ public class MyController {
         return "zt";
     }
 
+    @RequestMapping("/batchAdd")
+    @ResponseBody
+    public String batchAdd() {
+        List<Article> articles = articleService.findList();
+        articles.forEach(article -> {
+            esService.save(index, type, article.getId(), JSON.parseObject(JSON.toJSONString(article)));
+        });
+        return "zt";
+    }
+
     @RequestMapping("/findAll")
     @ResponseBody
-    public String findAll() {
+    public Object findAll() {
         JSONArray jsonArray = esService.find(index, type);
         List<Article> articles = JSONArray.parseArray(jsonArray.toJSONString(), Article.class);
         System.out.println("articles.size = " + articles.size());
-        return "zt";
+        return jsonArray;
     }
 
     @RequestMapping("/findQuery")
     @ResponseBody
-    public String findQuery() {
+    public Object findQuery() {
         JSONArray jsonArray = esService.find(index, type);
         List<Article> articles = JSONArray.parseArray(jsonArray.toJSONString(), Article.class);
         System.out.println("articles.size = " + articles.size());
-        return "zt";
+        return jsonArray;
+    }
+
+    @RequestMapping("/findPage")
+    @ResponseBody
+    public Object findPage(Integer pageSize, Integer pageNo) {
+        JSONArray jsonArray = esService.findByPage(index, type, pageSize, pageNo);
+        List<Article> articles = JSONArray.parseArray(jsonArray.toJSONString(), Article.class);
+        System.out.println("articles.size = " + articles.size());
+        return jsonArray;
     }
 
     @RequestMapping("/delete")
@@ -73,6 +93,36 @@ public class MyController {
     public String update(String id) {
         esService.update(index, type, id);
         return "zt";
+    }
+
+
+    @RequestMapping("/createCluterName")
+    @ResponseBody
+    public Object createCluterName() {
+        esService.createCluterName(indexTokenizer);
+        return true;
+    }
+
+    @RequestMapping("/createMapping")
+    @ResponseBody
+    public Object createMapping() {
+        esService.createMapping(indexTokenizer, typeTokenizer);
+        return true;
+    }
+
+    @RequestMapping("/addTokenizer")
+    @ResponseBody
+    public String addTokenizer(String id) {
+        Article article = articleService.findById(id);
+        esService.save(indexTokenizer, typeTokenizer, article.getId(), JSON.parseObject(JSON.toJSONString(article)));
+        return "zt";
+    }
+
+    //    @RequestMapping("/findTokenizer")
+//    @ResponseBody
+    public Object findTokenizer() {
+        JSONArray jsonArray = esService.findTokenizer(indexTokenizer, "安信证券股份有限公司关于北");
+        return jsonArray;
     }
 
 }

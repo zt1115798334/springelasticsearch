@@ -31,4 +31,14 @@ public class ArticleDaoImpl implements ArticleDao {
 
         return pageResult;
     }
+
+    @Override
+    public List<Article> findListByPageRtList(Integer pageNumber, Integer pageSize) {
+        int skip = (pageNumber - 1) * pageSize;
+        Query query = new Query();
+        query.skip(skip);
+        query.limit(pageSize);
+        List<Article> list = mongoTemplate.find(query, Article.class);
+        return list;
+    }
 }

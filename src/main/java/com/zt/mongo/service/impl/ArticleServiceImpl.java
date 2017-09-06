@@ -36,4 +36,9 @@ public class ArticleServiceImpl implements ArticleService {
     public PageResult<Article> findListByPage(Integer pageNumber, Integer pageSize) {
         return articleDao.findListByPage(pageNumber, pageSize);
     }
+
+    @Override
+    public List<Article> findListByPageRtList(Integer pageNumber, Integer pageSize) {
+        return articleDao.findListByPageRtList(pageNumber, pageSize);
+    }
 }

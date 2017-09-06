@@ -5,8 +5,11 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.zt.es.service.EsService;
+import com.zt.mongo.entity.Article;
 import org.elasticsearch.action.admin.indices.analyze.AnalyzeResponse;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
+import org.elasticsearch.action.bulk.BulkRequestBuilder;
+import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
@@ -53,7 +56,14 @@ public class EsServiceImpl implements EsService {
     }
 
     @Override
-    public boolean batchSave(String index, String type, String id, JSONObject jsonObject) {
+    public boolean batchSave(String index, String type, List<Article> articles) {
+        BulkRequestBuilder bulkRequest = client.prepareBulk();
+        articles.stream().forEach(article -> {
+            String id = article.getId();
+            JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(article));
+            bulkRequest.add(client.prepareIndex(index, type, id).setSource(jsonObject));
+        });
+        BulkResponse response = bulkRequest.execute().actionGet();
         return false;
     }
 

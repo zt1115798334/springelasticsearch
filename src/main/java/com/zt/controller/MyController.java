@@ -2,7 +2,7 @@ package com.zt.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.zt.base.entity.PageResult;
+import com.zt.constants.SysConst;
 import com.zt.es.service.EsService;
 import com.zt.mongo.entity.Article;
 import com.zt.mongo.service.ArticleService;
@@ -17,8 +17,6 @@ import java.util.List;
 @RequestMapping("/myController")
 public class MyController {
 
-    private static final String index = "jdjr";
-    private static final String type = "article";
 
     @Autowired
     private ArticleService articleService;
@@ -37,24 +35,22 @@ public class MyController {
     @ResponseBody
     public Object add(String id) {
         Article article = articleService.findById(id);
-        esService.save(index, type, article.getId(), JSON.parseObject(JSON.toJSONString(article)));
+        esService.save(SysConst.INDEX, SysConst.TYPE, article.getId(), JSON.parseObject(JSON.toJSONString(article)));
         return true;
     }
 
     @RequestMapping("/batchAdd")
     @ResponseBody
     public Object batchAdd() {
-        PageResult<Article> pageResult = articleService.findListByPage(1, 100);
-        pageResult.getList().forEach(article -> {
-            esService.save(index, type, article.getId(), JSON.parseObject(JSON.toJSONString(article)));
-        });
+        List<Article> articles = articleService.findListByPageRtList(1, 100);
+        esService.batchSave(SysConst.INDEX, SysConst.TYPE, articles);
         return true;
     }
 
     @RequestMapping("/findAll")
     @ResponseBody
     public Object findAll() {
-        JSONArray jsonArray = esService.find(index, type);
+        JSONArray jsonArray = esService.find(SysConst.INDEX, SysConst.TYPE);
         List<Article> articles = JSONArray.parseArray(jsonArray.toJSONString(), Article.class);
         System.out.println("articles.size = " + articles.size());
         return jsonArray;
@@ -63,7 +59,7 @@ public class MyController {
     @RequestMapping("/findQuery")
     @ResponseBody
     public Object findQuery() {
-        JSONArray jsonArray = esService.find(index, type);
+        JSONArray jsonArray = esService.find(SysConst.INDEX, SysConst.TYPE);
         List<Article> articles = JSONArray.parseArray(jsonArray.toJSONString(), Article.class);
         System.out.println("articles.size = " + articles.size());
         return jsonArray;
@@ -72,7 +68,7 @@ public class MyController {
     @RequestMapping("/findPage")
     @ResponseBody
     public Object findPage(Integer pageSize, Integer pageNo) {
-        JSONArray jsonArray = esService.findByPage(index, type, pageSize, pageNo);
+        JSONArray jsonArray = esService.findByPage(SysConst.INDEX, SysConst.TYPE, pageSize, pageNo);
         List<Article> articles = JSONArray.parseArray(jsonArray.toJSONString(), Article.class);
         System.out.println("articles.size = " + articles.size());
         return jsonArray;
@@ -81,14 +77,14 @@ public class MyController {
     @RequestMapping("/delete")
     @ResponseBody
     public Object delete(String id) {
-        esService.delete(index, type, id);
+        esService.delete(SysConst.INDEX, SysConst.TYPE, id);
         return true;
     }
 
     @RequestMapping("/update")
     @ResponseBody
     public Object update(String id) {
-        esService.update(index, type, id);
+        esService.update(SysConst.INDEX, SysConst.TYPE, id);
         return true;
     }
 
@@ -96,21 +92,21 @@ public class MyController {
     @RequestMapping("/createCluterName")
     @ResponseBody
     public Object createCluterName() {
-        esService.createCluterName(index);
+        esService.createCluterName(SysConst.INDEX);
         return true;
     }
 
     @RequestMapping("/createMapping")
     @ResponseBody
     public Object createMapping() {
-        esService.createMapping(index, type);
+        esService.createMapping(SysConst.INDEX, SysConst.TYPE);
         return true;
     }
 
     //    @RequestMapping("/findTokenizer")
 //    @ResponseBody
     public Object findTokenizer() {
-        JSONArray jsonArray = esService.findTokenizer(index, "安信证券股份有限公司关于北");
+        JSONArray jsonArray = esService.findTokenizer(SysConst.INDEX, "安信证券股份有限公司关于北");
         return jsonArray;
     }
 

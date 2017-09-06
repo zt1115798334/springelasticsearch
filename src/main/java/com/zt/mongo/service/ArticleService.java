@@ -12,4 +12,6 @@ public interface ArticleService {
     Article findById(String id);
 
     PageResult<Article> findListByPage(Integer pageNumber, Integer pageSize);
+
+    List<Article> findListByPageRtList(Integer pageNumber, Integer pageSize);
 }

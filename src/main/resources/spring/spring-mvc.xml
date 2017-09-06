@@ -4,6 +4,7 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:mongo="http://www.springframework.org/schema/data/mongo"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context
@@ -11,11 +12,15 @@
                            http://www.springframework.org/schema/data/mongo
                            http://www.springframework.org/schema/data/mongo/spring-mongo.xsd
                            http://www.springframework.org/schema/mvc
-                           http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd">
+                           http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+                           http://www.springframework.org/schema/task
+                           http://www.springframework.org/schema/task/spring-task-3.2.xsd">
     <context:component-scan base-package="com.zt"/>
     <!-- 使用默认的注解映射 -->
     <mvc:annotation-driven/>
-    <mvc:default-servlet-handler />
+    <mvc:default-servlet-handler/>
+    <!-- task任务扫描注解 -->
+    <task:annotation-driven/>
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/pages/"/>
@@ -37,14 +42,16 @@
             </list>
         </property>
     </bean>
+
     <!--连接池配置-->
-    <mongo:mongo-client id="mongoClient" host="${mongo.host}" port="${mongo.port}" credentials="${mongo.username}:${mongo.password}@${mongo.dbname}">
+    <mongo:mongo-client id="mongoClient" host="${mongo.host}" port="${mongo.port}"
+                        credentials="${mongo.username}:${mongo.password}@${mongo.dbname}">
         <mongo:client-options connections-per-host="${mongo.options.connections-per-host}"
-                       threads-allowed-to-block-for-connection-multiplier="${mongo.options.threads-allowed-to-block-for-connection-multiplier}"
-                       connect-timeout="${mongo.options.connect-timeout}"
-                       max-wait-time="${mongo.options.max-wait-time}"
-                       socket-keep-alive="${mongo.options.socket-keep-alive}"
-                       socket-timeout="${mongo.options.socket-timeout}"/>
+                              threads-allowed-to-block-for-connection-multiplier="${mongo.options.threads-allowed-to-block-for-connection-multiplier}"
+                              connect-timeout="${mongo.options.connect-timeout}"
+                              max-wait-time="${mongo.options.max-wait-time}"
+                              socket-keep-alive="${mongo.options.socket-keep-alive}"
+                              socket-timeout="${mongo.options.socket-timeout}"/>
     </mongo:mongo-client>
     <!--连接池工厂配置-->
     <mongo:db-factory dbname="${mongo.dbname}" mongo-ref="mongoClient"/>
@@ -52,7 +59,7 @@
         <constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
     </bean>
     <!-- mongodb bean的仓库目录，会自动扫描扩展了MongoRepository接口的接口进行注入 -->
-    <mongo:repositories base-package="com.zt.mongo.repository" />
+    <mongo:repositories base-package="com.zt.mongo.repository"/>
     <!--实体映射自动扫描注入的包-->
     <mongo:mapping-converter>
         <mongo:custom-converters base-package="com.zt.mongo.entity"/>

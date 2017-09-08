@@ -22,7 +22,7 @@ public class InitEs implements InitializingBean {
         boolean flag = esService.isExistsIndex(SysConst.INDEX);
         if (!flag) {
             esService.createCluterName(SysConst.INDEX);
-            esService.createMapping(SysConst.INDEX, SysConst.TYPE);
+            esService.createMapping(SysConst.INDEX, SysConst.ARTICLE);
         }
     }
 }

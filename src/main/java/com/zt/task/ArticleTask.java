@@ -37,11 +37,11 @@ public class ArticleTask {
             PageResult<Article> page = articleService.findListByPage(pageNumber, pageSize);
             long totalPages = page.getTotalPages();
             List<Article> articles = page.getList();
-            esService.batchSave(SysConst.INDEX, SysConst.TYPE, articles);
+            esService.batchSave(SysConst.INDEX, SysConst.ARTICLE, articles);
             for (int i = 2; i <= totalPages; i++) {
                 logger.info("页数 = " + i);
                 List<Article> articles1 = articleService.findListByPageRtList(i, pageSize);
-                esService.batchSave(SysConst.INDEX, SysConst.TYPE, articles1);
+                esService.batchSave(SysConst.INDEX, SysConst.ARTICLE, articles1);
             }
         });
 

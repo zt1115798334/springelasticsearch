@@ -21,9 +21,7 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.client.Requests;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
-import org.elasticsearch.index.query.MatchQueryBuilder;
-import org.elasticsearch.index.query.RangeQueryBuilder;
-import org.elasticsearch.index.query.TermQueryBuilder;
+import org.elasticsearch.index.query.*;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.DeleteByQueryAction;
 import org.elasticsearch.search.SearchHit;
@@ -55,6 +53,13 @@ public class EsServiceImpl implements EsService {
         IndexResponse response = client.prepareIndex(index, type, id)
                 .setSource(jsonObject).execute().actionGet();
         return true;
+    }
+
+    @Override
+    public boolean save(String index, String type, JSONObject jsonObject) {
+        IndexResponse response = client.prepareIndex(index, type)
+                .setSource(jsonObject).execute().actionGet();
+        return false;
     }
 
     @Override
@@ -94,6 +99,18 @@ public class EsServiceImpl implements EsService {
                 .execute().actionGet();//执行
         List<AnalyzeResponse.AnalyzeToken> ikTokenList = response.getTokens();
         JSONArray result = JSONArray.parseArray(JSON.toJSONString(ikTokenList));
+        return result;
+    }
+
+    @Override
+    public JSONArray find(String index, String type, QueryBuilder query) {
+        SearchResponse response = client.prepareSearch(index)
+                .setTypes(type)
+//                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                .setQuery(query)
+//                .setExplain(true)
+                .get();
+        JSONArray result = readSearchResponse(response);
         return result;
     }
 

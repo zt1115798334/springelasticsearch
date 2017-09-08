@@ -13,5 +13,6 @@ public class SysConst {
     public static final int DEFAULT_BATCH_SIZE = 200;
 
     public static final String INDEX = "jdjr";
-    public static final String TYPE = "article";
+    public static final String ARTICLE = "article";
+    public static final String ENTERPRISEINFO = "enterprise_info";
 }

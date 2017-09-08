@@ -42,7 +42,8 @@
             </list>
         </property>
     </bean>
-
+    <!-- 支持上传文件 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
     <!--连接池配置-->
     <mongo:mongo-client id="mongoClient" host="${mongo.host}" port="${mongo.port}"
                         credentials="${mongo.username}:${mongo.password}@${mongo.dbname}">

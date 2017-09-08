@@ -3,9 +3,7 @@ package com.zt.es.service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.zt.mongo.entity.Article;
-import org.elasticsearch.index.query.MatchQueryBuilder;
-import org.elasticsearch.index.query.RangeQueryBuilder;
-import org.elasticsearch.index.query.TermQueryBuilder;
+import org.elasticsearch.index.query.*;
 
 import java.util.List;
 
@@ -15,11 +13,15 @@ public interface EsService {
 
     boolean save(String index, String type, String id, JSONObject jsonObject);
 
+    boolean save(String index, String type, JSONObject jsonObject);
+
     boolean batchSave(String index, String type, List<Article> articles);
 
     JSONArray find(String index, String type);
 
     JSONArray findTokenizer(String index, String content);
+
+    JSONArray find(String index, String type, QueryBuilder query);
 
     JSONArray find(String index, String type, TermQueryBuilder termQuery, RangeQueryBuilder rangeQuery);
 
@@ -50,4 +52,5 @@ public interface EsService {
     void createMapping(String index, String type);
 
     boolean isExistsIndex(String index);
+
 }

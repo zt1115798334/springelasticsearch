@@ -34,11 +34,6 @@ public interface EsService {
      */
     boolean update(String index, String type, String id);
 
-
-    ///////////////////////////////////////////////////////////////////////////
-    //
-    ///////////////////////////////////////////////////////////////////////////
-
     /**
      * 创建索引
      *
@@ -53,4 +48,6 @@ public interface EsService {
      * @param type  索引类型
      */
     void createMapping(String index, String type);
+
+    boolean isExistsIndex(String index);
 }

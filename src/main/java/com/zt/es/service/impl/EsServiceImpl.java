@@ -7,6 +7,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.zt.es.service.EsService;
 import com.zt.mongo.entity.Article;
 import org.elasticsearch.action.admin.indices.analyze.AnalyzeResponse;
+import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
+import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.bulk.BulkResponse;
@@ -171,10 +173,23 @@ public class EsServiceImpl implements EsService {
             XContentBuilder builder = XContentFactory.jsonBuilder()
                     .startObject()
                     .startObject("properties")
-                    .startObject("title").field("type", "string").endObject()
-                    .startObject("content").field("type", "string").endObject()
-                    .startObject("author").field("type", "string").endObject()
-                    .startObject("list").field("type", "object").endObject()//关联数据
+                    .startObject("title").field("type", "string").field("store", "yes")
+                    .field("indexAnalyzer", "ik").field("searchAnalyzer", "ik").endObject()
+                    .startObject("media").field("type", "string").field("store", "yes").endObject()
+                    .startObject("mediaType").field("type", "string").field("store", "yes").endObject()
+                    .startObject("content").field("type", "string").field("store", "yes").endObject()
+                    .startObject("publishDateTime").field("type", "date").field("store", "yes").endObject()
+                    .startObject("publishDate").field("type", "string").field("store", "yes").endObject()
+                    .startObject("author").field("type", "string").field("store", "yes").endObject()
+                    .startObject("keywords").field("type", "string").field("store", "yes").endObject()
+                    .startObject("url").field("type", "string").field("store", "yes").endObject()
+                    .startObject("urlMD5").field("type", "string").field("store", "yes").endObject()
+                    .startObject("crawlerDate").field("type", "string").field("store", "yes").endObject()
+                    .startObject("crawlerDateTime").field("type", "date").field("store", "yes").endObject()
+                    .startObject("articleFingerprint").field("type", "string").field("store", "yes").endObject()
+                    .startObject("hot").field("type", "long").field("store", "yes").endObject()
+                    .startObject("isAnalyzed").field("type", "string").field("store", "yes").endObject()
+                    .startObject("taskId").field("type", "string").field("store", "yes").endObject()
                     .endObject()
                     .endObject();
             PutMappingRequest mapping = Requests.putMappingRequest(index).type(type).source(builder);
@@ -183,6 +198,13 @@ public class EsServiceImpl implements EsService {
             e.printStackTrace();
         }
         //field("store", "yes")并不是必需的，但是field("type", "string")是必需要存在的，不然会报错。
+    }
+
+    @Override
+    public boolean isExistsIndex(String index) {
+        IndicesExistsResponse response = client.admin().indices().exists(
+                new IndicesExistsRequest().indices(new String[]{index})).actionGet();
+        return response.isExists();
     }
 
     private JSONArray readSearchResponse(SearchResponse response) {

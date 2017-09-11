@@ -179,11 +179,10 @@ public class MyController {
 //        fuzzy.fuzziness(Fuzziness.ONE);
         // 公共前缀
 //        fuzzy.prefixLength(0);
-//        WildcardQueryBuilder wildcard = QueryBuilders.wildcardQuery("enterpriseAbbr", "*" + enterpriseAbbr + "*");
-        WildcardQueryBuilder wildcard = QueryBuilders.wildcardQuery("enterpriseAbbr.keyword", "*招商*");
+        WildcardQueryBuilder wildcard = QueryBuilders.wildcardQuery("enterpriseAbbr.keyword", "*" + enterpriseAbbr + "*");
         TermQueryBuilder termQuery = QueryBuilders.termQuery("enterpriseAbbr.keyword", enterpriseAbbr);
         MatchQueryBuilder matchQuery = QueryBuilders.matchQuery("enterpriseAbbr.keyword", enterpriseAbbr);
-        JSONArray result = esService.find(SysConst.INDEX, SysConst.ENTERPRISEINFO, wildcard);
+        JSONArray result = esService.find(SysConst.INDEX, SysConst.ENTERPRISEINFO, fuzzy);
         return result;
     }
 
@@ -195,6 +194,8 @@ public class MyController {
             result = enterpriseName.substring(0, enterpriseName.lastIndexOf("股份有限公司"));
         } else if (enterpriseName.endsWith("有限公司")) {
             result = enterpriseName.substring(0, enterpriseName.lastIndexOf("有限公司"));
+        } else {
+            result = enterpriseName;
         }
         return result;
     }

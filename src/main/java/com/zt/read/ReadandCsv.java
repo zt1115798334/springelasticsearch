@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-public class readandCsv {
+public class ReadandCsv {
     public static void main(String[] args) {
         try {
             File f = new File("E://red.csv");
